@@ -1,5 +1,8 @@
 ﻿namespace Topology.Domain.Constraints
 {
+    /// <summary>
+    /// Ensure that nodes do not have an excessive number of outbound links
+    /// </summary>
     public class MaxFanOut : ITopologyRule
     {
         public string RuleName()

@@ -6,12 +6,12 @@ namespace Topology.Tests;
 using Domain.Entities;
 
 /// <summary>
-/// These are tests to cover Topology level constraints
+/// These are tests to cover the TopologyValidator
 /// </summary>
 [TestClass]
-public sealed class TopologyTests
+public sealed class TopologyValidatorTests
 {
-    private TopologyValidator CreateValidator()
+    private static TopologyValidator CreateValidator()
     {
         return new TopologyValidator([new NoOrphanNodes(), new NoCyclicLinks(), new CapabilityRequiredAttribute(),new LinkKind(), new MaxFanOut()]);
     }

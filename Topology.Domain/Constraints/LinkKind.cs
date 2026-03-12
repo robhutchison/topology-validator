@@ -1,5 +1,8 @@
 ﻿namespace Topology.Domain.Constraints
 {
+    /// <summary>
+    /// Validate that the kind of link between 2 nodes is valid based on their types
+    /// </summary>
     public class LinkKind : ITopologyRule
     {
         private readonly Dictionary<string, (string from,string to)> _allowedLinks = new()

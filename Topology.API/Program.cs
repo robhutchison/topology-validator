@@ -43,7 +43,7 @@ app.MapPost("/topology/validate", (TopologyDto dto) =>
     var topology = new Topology.Domain.Entities.Topology
     {
         Links = dto.Links.Select(x => new Link { From = x.From, To = x.To, Kind = x.Kind }).ToList(),
-        Nodes = dto.Nodes.Select(x => new Node { Attributes = x.Attributes, Capabilities = x.Capabilities }).ToList()
+        Nodes = dto.Nodes.Select(x => new Node { Attributes = x.Attributes.AsReadOnly(), Capabilities = x.Capabilities.AsReadOnly() }).ToList()
     };
     var result = validator.ValidateTopology(topology);
 
@@ -69,4 +69,4 @@ app.MapGet("/rules", () =>
     return Results.Ok(validator.GetRules());
 });
 
-app.Run();
+await app.RunAsync();

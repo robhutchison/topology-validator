@@ -14,8 +14,8 @@ namespace Topology.Application
         /// <summary>
         /// Take in a Topology and run each of the constraints on it to check if it is valid and return any errors if not.
         /// </summary>
-        /// <param name="topology"></param>
-        /// <returns></returns>
+        /// <param name="topology">A system topology description</param>
+        /// <returns>A ValidationResult indicating the result of processing by the configured constraints</returns>
         public ValidationResult ValidateTopology(Domain.Entities.Topology topology)
         {
             var ruleResults = new List<RuleResult>();

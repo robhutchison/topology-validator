@@ -1,5 +1,8 @@
 ﻿namespace Topology.Domain.Constraints;
 
+/// <summary>
+/// Ensure that all nodes are linked to at least one other
+/// </summary>
 public class NoOrphanNodes : ITopologyRule
 {
     public string RuleName()

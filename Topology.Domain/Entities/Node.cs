@@ -1,5 +1,8 @@
 ﻿namespace Topology.Domain.Entities
 {
+    /// <summary>
+    /// Represents a node in the system
+    /// </summary>
     public sealed class Node
     {
         public string Id { get; init; } = null!;

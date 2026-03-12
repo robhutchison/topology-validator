@@ -1,5 +1,8 @@
 ﻿namespace Topology.Domain.Constraints
 {
+    /// <summary>
+    /// Ensure that linear type nodes do not refer back to earlier ones causing a cyclic flow
+    /// </summary>
     public class NoCyclicLinks : ITopologyRule
     {
         public string RuleName()

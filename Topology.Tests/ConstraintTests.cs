@@ -235,11 +235,6 @@ namespace Topology.Tests
 
         // link tests
 
-        // need tests for the rest:
-        // data = comp->store
-        // control = comp->comp
-        // rep = store->store
-
         [TestMethod]
         public void Test_LinkKind_DataInvalid()
         {

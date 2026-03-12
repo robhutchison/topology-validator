@@ -1,5 +1,8 @@
 ﻿namespace Topology.Domain.Constraints;
 
+/// <summary>
+/// Ensure that entities have a required attribute if they claim a particular capability
+/// </summary>
 public class CapabilityRequiredAttribute : ITopologyRule
 {
     private readonly Dictionary<string, string> _requiredCapAttributes = new()

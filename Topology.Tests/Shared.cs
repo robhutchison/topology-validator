@@ -3,7 +3,7 @@ using Topology.Domain.Entities;
 
 namespace Topology.Tests;
 
-public class Shared
+public static class Shared
 {
     public const string DataLink = "data";
     public const string ControlLink = "control";

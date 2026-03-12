@@ -1,0 +1,16 @@
+﻿<Project Sdk="MSTest.Sdk/4.0.1">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseVSTest>true</UseVSTest>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Topology.Application\Topology.Application.csproj" />
+    <ProjectReference Include="..\Topology.Domain\Topology.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

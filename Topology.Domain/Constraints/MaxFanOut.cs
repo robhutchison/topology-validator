@@ -2,6 +2,11 @@
 {
     public class MaxFanOut : ITopologyRule
     {
+        public string RuleName()
+        {
+            return nameof(MaxFanOut);
+        }
+
         public RuleResult Evaluate(Entities.Topology topology)
         {
             var messages = new List<string>();

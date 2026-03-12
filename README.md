@@ -246,4 +246,19 @@ This challenge is:
 
 ---
 
-If you want, I can help you craft **example valid/invalid topology JSON**, or a **starter ADR**, so your repo looks polished from the start.
+## Architecture
+
+I've followed the plan of using minimal APIs but I'd normally go with controllers and 
+setup proper serilog logging for a real project.
+
+I've developed this using TDD style based on the design specifications as this made the 
+most sense and is normally my go to approach to system build.
+
+## Trade offs
+
+A number of trade offs have been made in this solution due to time constraints.
+There isn't proper error handling, the setup for the rules could be done via reflection 
+(or a source generator) rather than hardcoded but at least it is just setup in the program file to make it easier 
+to update for now, there are more edge cases and tests which could be included.
+
+I'll continue adding to this solution as time goes on.

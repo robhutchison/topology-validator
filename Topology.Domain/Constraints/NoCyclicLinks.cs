@@ -2,6 +2,11 @@
 {
     public class NoCyclicLinks : ITopologyRule
     {
+        public string RuleName()
+        {
+            return nameof(NoCyclicLinks);
+        }
+
         public RuleResult Evaluate(Entities.Topology topology)
         {
             var previousLinearNodeIds = new List<string>();

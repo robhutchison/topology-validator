@@ -2,6 +2,6 @@
 
 public sealed class TopologyDto
 {
-    public IReadOnlyList<NodeDto> Nodes { get; init; } = null!;
-    public IReadOnlyList<LinkDto> Links { get; init; } = null!;
+    public IList<NodeDto> Nodes { get; init; } = null!;
+    public IList<LinkDto> Links { get; init; } = null!;
 }

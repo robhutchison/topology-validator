@@ -1,5 +1,4 @@
-﻿using System.Collections.ObjectModel;
-using Topology.Domain.Constraints;
+﻿using Topology.Domain.Constraints;
 using Topology.Domain.Entities;
 
 
@@ -11,55 +10,14 @@ namespace Topology.Tests
     [TestClass]
     public class ConstraintTests
     {
-        private const string DataLink = "data";
-        private const string ControlLink = "control";
-        private const string ReplicateLink = "replicate";
-
-        private static Node CreateNode(string type, List<string>? capabilities = null, Dictionary<string, object>? attributes = null)
-        {
-            return new Node
-            {
-                Id = DateTime.Now.Ticks.ToString(),
-                Type = type,
-                Capabilities = capabilities?.AsReadOnly() ?? [],
-                Attributes = attributes?.AsReadOnly() ?? new ReadOnlyDictionary<string, object>(new Dictionary<string, object>())
-            };
-        }
-
-
-        private static Node CreateComputeNode()
-        {
-            return CreateNode("compute");
-        }
-
-        private static Node CreateStorageNode()
-        {
-            return CreateNode("storage");
-        }
-
-        private static Node CreateLinearNode()
-        {
-            return CreateNode("linear");
-        }
-
-        public static Link LinkNodes(Node node1, Node node2, string kind)
-        {
-            return new Link
-            {
-                From = node1.Id,
-                To = node2.Id,
-                Kind = kind
-            };
-        }
-
         [TestMethod]
         public void Test_NoOrphanNodes_Passes()
         {
             // arrange
-            var node1 = CreateComputeNode();
-            var node2 = CreateStorageNode();
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateStorageNode();
 
-            var link = LinkNodes(node1, node2, DataLink);
+            var link = Shared.LinkNodes(node1, node2, Shared.DataLink);
             var topology = new Domain.Entities.Topology
             {
                 Nodes = [node1, node2],
@@ -80,9 +38,9 @@ namespace Topology.Tests
         public void Test_NoOrphanNodes_Fails()
         {
             // arrange
-            var node1 = CreateComputeNode();
-            var node2 = CreateStorageNode();
-            var node3 = CreateComputeNode();
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateStorageNode();
+            var node3 = Shared.CreateComputeNode();
             var link = new Link
             {
                 From = node1.Id,
@@ -113,13 +71,13 @@ namespace Topology.Tests
         public void Test_LinearNodesNotCyclic_FailsForLoop()
         {
             // arrange
-            var node1 = CreateLinearNode();
-            var node2 = CreateLinearNode();
-            var node3 = CreateLinearNode();
+            var node1 = Shared.CreateLinearNode();
+            var node2 = Shared.CreateLinearNode();
+            var node3 = Shared.CreateLinearNode();
 
-            var link1 = LinkNodes(node1, node2,ControlLink);
-            var link2 = LinkNodes(node2, node3, ControlLink);
-            var link3 = LinkNodes(node3, node1, ControlLink);
+            var link1 = Shared.LinkNodes(node1, node2, Shared.ControlLink);
+            var link2 = Shared.LinkNodes(node2, node3, Shared.ControlLink);
+            var link3 = Shared.LinkNodes(node3, node1, Shared.ControlLink);
 
             var topology = new Domain.Entities.Topology
             {
@@ -145,14 +103,14 @@ namespace Topology.Tests
         public void Test_LinearNodesNotCyclic_PassesWhenNotLooping()
         {
             // arrange
-            var node1 = CreateLinearNode();
-            var node2 = CreateLinearNode();
-            var node3 = CreateLinearNode();
-            var node4 = CreateLinearNode();
+            var node1 = Shared.CreateLinearNode();
+            var node2 = Shared.CreateLinearNode();
+            var node3 = Shared.CreateLinearNode();
+            var node4 = Shared.CreateLinearNode();
 
-            var link1 = LinkNodes(node1, node2, ControlLink);
-            var link2 = LinkNodes(node2, node3, ControlLink);
-            var link3 = LinkNodes(node3, node4, ControlLink);
+            var link1 = Shared.LinkNodes(node1, node2, Shared.ControlLink);
+            var link2 = Shared.LinkNodes(node2, node3, Shared.ControlLink);
+            var link3 = Shared.LinkNodes(node3, node4, Shared.ControlLink);
 
             var topology = new Domain.Entities.Topology
             {
@@ -179,7 +137,7 @@ namespace Topology.Tests
         public void Test_NodeWithoutCapabilityOrRequiredAttribute()
         {
             // arrange
-            var node1 = CreateComputeNode();
+            var node1 = Shared.CreateComputeNode();
 
             var topology = new Domain.Entities.Topology
             {
@@ -204,7 +162,7 @@ namespace Topology.Tests
         public void Test_CapabilityWithoutNoAttributes(string capability, string requiredAttrib)
         {
             // arrange
-            var node1 = CreateNode("test",[capability]);
+            var node1 = Shared.CreateNode("test",[capability]);
 
             var topology = new Domain.Entities.Topology
             {
@@ -230,7 +188,7 @@ namespace Topology.Tests
         public void Test_CapabilityWithoutRequiredAttribute(string capability, string requiredAttrib)
         {
             // arrange
-            var node1 = CreateNode("test", [capability], new Dictionary<string, object> { { "dummy", "1" } });
+            var node1 = Shared.CreateNode("test", [capability], new Dictionary<string, object> { { "dummy", "1" } });
 
             var topology = new Domain.Entities.Topology
             {
@@ -256,7 +214,7 @@ namespace Topology.Tests
         public void Test_CapabilityWithRequiredAttribute(string capability, string requiredAttrib)
         {
             // arrange
-            var node1 = CreateNode("test", [capability],new Dictionary<string, object>{{requiredAttrib,"1"}});
+            var node1 = Shared.CreateNode("test", [capability],new Dictionary<string, object>{{requiredAttrib,"1"}});
 
             var topology = new Domain.Entities.Topology
             {
@@ -277,13 +235,18 @@ namespace Topology.Tests
 
         // link tests
 
+        // need tests for the rest:
+        // data = comp->store
+        // control = comp->comp
+        // rep = store->store
+
         [TestMethod]
-        public void Test_LinkKindInvalid()
+        public void Test_LinkKind_DataInvalid()
         {
             // arrange
-            var node1 = CreateComputeNode();
-            var node2 = CreateComputeNode();
-            var link = LinkNodes(node1, node2, DataLink);
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateComputeNode();
+            var link = Shared.LinkNodes(node1, node2, Shared.DataLink);
 
             var topology = new Domain.Entities.Topology
             {
@@ -305,12 +268,116 @@ namespace Topology.Tests
         }
 
         [TestMethod]
-        public void Test_LinkKindValid()
+        public void Test_LinkKind_ControlInvalid()
         {
             // arrange
-            var node1 = CreateComputeNode();
-            var node2 = CreateComputeNode();
-            var link = LinkNodes(node1, node2, ControlLink);
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateStorageNode();
+            var link = Shared.LinkNodes(node1, node2, Shared.ControlLink);
+
+            var topology = new Domain.Entities.Topology
+            {
+                Nodes = [node1, node2],
+                Links = [link]
+            };
+
+            // act
+            var sut = new LinkKind();
+            var result = sut.Evaluate(topology);
+
+            // assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.Passed);
+            Assert.IsNotEmpty(result.RuleName);
+            Assert.IsNotEmpty(result.Messages);
+            Assert.IsTrue(result.Messages.Any(x =>
+                x.Equals($"A {link.Kind} link from a {node1.Type} to a {node2.Type} is invalid")));
+        }
+
+        [TestMethod]
+        public void Test_LinkKind_ReplicateInvalid()
+        {
+            // arrange
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateComputeNode();
+            var link = Shared.LinkNodes(node1, node2, Shared.ReplicateLink);
+
+            var topology = new Domain.Entities.Topology
+            {
+                Nodes = [node1, node2],
+                Links = [link]
+            };
+
+            // act
+            var sut = new LinkKind();
+            var result = sut.Evaluate(topology);
+
+            // assert
+            Assert.IsNotNull(result);
+            Assert.IsFalse(result.Passed);
+            Assert.IsNotEmpty(result.RuleName);
+            Assert.IsNotEmpty(result.Messages);
+            Assert.IsTrue(result.Messages.Any(x =>
+                x.Equals($"A {link.Kind} link from a {node1.Type} to a {node2.Type} is invalid")));
+        }
+
+        [TestMethod]
+        public void Test_LinkKind_DataValid()
+        {
+            // arrange
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateStorageNode();
+            var link = Shared.LinkNodes(node1, node2, Shared.DataLink);
+
+            var topology = new Domain.Entities.Topology
+            {
+                Nodes = [node1, node2],
+                Links = [link]
+            };
+
+            // act
+            var sut = new LinkKind();
+            var result = sut.Evaluate(topology);
+
+            // assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Passed);
+            Assert.IsNotEmpty(result.RuleName);
+            Assert.IsEmpty(result.Messages);
+        }
+
+        [TestMethod]
+        public void Test_LinkKind_ControlValid()
+        {
+            // arrange
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateComputeNode();
+            var link = Shared.LinkNodes(node1, node2, Shared.ControlLink);
+
+            var topology = new Domain.Entities.Topology
+            {
+                Nodes = [node1, node2],
+                Links = [link]
+            };
+
+            // act
+            var sut = new LinkKind();
+            var result = sut.Evaluate(topology);
+
+            // assert
+            Assert.IsNotNull(result);
+            Assert.IsTrue(result.Passed);
+            Assert.IsNotEmpty(result.RuleName);
+            Assert.IsEmpty(result.Messages);
+        }
+
+        [TestMethod]
+        public void Test_LinkKind_ReplicateValid()
+        {
+            // arrange
+            var node1 = Shared.CreateStorageNode();
+            var node2 = Shared.CreateStorageNode();
+            var link = Shared.LinkNodes(node1, node2, Shared.ReplicateLink);
 
             var topology = new Domain.Entities.Topology
             {
@@ -335,17 +402,17 @@ namespace Topology.Tests
         public void Test_MaxFanOutForCompute_TooManyLinks()
         {
             // arrange
-            var node1 = CreateComputeNode();
-            var node2 = CreateComputeNode();
-            var node3 = CreateStorageNode();
-            var node4 = CreateComputeNode();
-            var node5 = CreateComputeNode();
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateComputeNode();
+            var node3 = Shared.CreateStorageNode();
+            var node4 = Shared.CreateComputeNode();
+            var node5 = Shared.CreateComputeNode();
             
 
-            var link1 = LinkNodes(node1, node2, ControlLink);
-            var link2 = LinkNodes(node1, node3, DataLink);
-            var link3 = LinkNodes(node1, node4, ControlLink);
-            var link4 = LinkNodes(node1, node5, ControlLink);
+            var link1 = Shared.LinkNodes(node1, node2, Shared.ControlLink);
+            var link2 = Shared.LinkNodes(node1, node3, Shared.DataLink);
+            var link3 = Shared.LinkNodes(node1, node4, Shared.ControlLink);
+            var link4 = Shared.LinkNodes(node1, node5, Shared.ControlLink);
 
             var topology = new Domain.Entities.Topology
             {
@@ -370,15 +437,15 @@ namespace Topology.Tests
         public void Test_MaxFanOutForCompute_Passes()
         {
             // arrange
-            var node1 = CreateComputeNode();
-            var node2 = CreateComputeNode();
-            var node3 = CreateStorageNode();
-            var node4 = CreateComputeNode();
+            var node1 = Shared.CreateComputeNode();
+            var node2 = Shared.CreateComputeNode();
+            var node3 = Shared.CreateStorageNode();
+            var node4 = Shared.CreateComputeNode();
 
 
-            var link1 = LinkNodes(node1, node2, ControlLink);
-            var link2 = LinkNodes(node1, node3, DataLink);
-            var link3 = LinkNodes(node1, node4, ControlLink);
+            var link1 = Shared.LinkNodes(node1, node2, Shared.ControlLink);
+            var link2 = Shared.LinkNodes(node1, node3, Shared.DataLink);
+            var link3 = Shared.LinkNodes(node1, node4, Shared.ControlLink);
             
 
             var topology = new Domain.Entities.Topology

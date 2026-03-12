@@ -2,6 +2,11 @@
 
 public class NoOrphanNodes : ITopologyRule
 {
+    public string RuleName()
+    {
+        return nameof(NoOrphanNodes);
+    }
+
     public RuleResult Evaluate(Entities.Topology topology)
     {
         // make sure the nodes are all in the links list

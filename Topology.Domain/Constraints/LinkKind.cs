@@ -9,6 +9,11 @@
             {"replicate",("storage","storage")},
         };
 
+        public string RuleName()
+        {
+            return nameof(LinkKind);
+        }
+
         public RuleResult Evaluate(Entities.Topology topology)
         {
             var messages = new List<string>();

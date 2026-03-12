@@ -3,6 +3,6 @@
     public sealed class ValidationResultDto
     {
         public bool Passed { get; init; }
-        public IReadOnlyList<RuleResultDto> RuleResults { get; init; } = null!;
+        public IList<RuleResultDto> RuleResults { get; init; } = null!;
     }
 }

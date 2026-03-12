@@ -1,4 +1,5 @@
 ﻿using Topology.Application;
+using Topology.Domain.Constraints;
 
 namespace Topology.Tests;
 
@@ -10,6 +11,11 @@ using Domain.Entities;
 [TestClass]
 public sealed class TopologyTests
 {
+    private TopologyValidator CreateValidator()
+    {
+        return new TopologyValidator([new NoOrphanNodes(), new NoCyclicLinks(), new CapabilityRequiredAttribute(),new LinkKind(), new MaxFanOut()]);
+    }
+
     /// <summary>
     /// Every node must appear in at least 1 link (either From or To)
     /// </summary>
@@ -19,16 +25,10 @@ public sealed class TopologyTests
         // arrange
         // create a topology with no orphan nodes
 
-        // create a helper to generate these for us
-        var node1 = new Node { Id = "node1", Type = "compute"};
-        var node2 = new Node { Id = "node2", Type = "storage" };
+        var node1 = Shared.CreateComputeNode();
+        var node2 = Shared.CreateStorageNode();
 
-        var link = new Link
-        {
-            From = node1.Id,
-            To = node2.Id,
-            Kind = "data"
-        };
+        var link = Shared.LinkNodes(node1, node2, Shared.DataLink);
         var topology = new Topology
         {
             Nodes = [node1, node2],
@@ -37,42 +37,47 @@ public sealed class TopologyTests
 
         // act
         // pass the topology to the validator 
-        var sut = new TopologyValidator();
+        var sut = CreateValidator();
         var result = sut.ValidateTopology(topology);
 
         // assert
         Assert.IsNotNull(result);
         Assert.IsTrue(result.Passed);
         Assert.IsNotEmpty(result.RuleResults);
+        Assert.HasCount(5,result.RuleResults);
+        Assert.HasCount(5, result.RuleResults.Where(x=>x.Passed));
     }
-    // report if the topology has validation error for orphan nodes.
 
     /// <summary>
-    /// Check that Linear nodes do not form a cyclic loop
-    /// A -> B -> C -> A
+    /// Every node must appear in at least 1 link (either From or To)
     /// </summary>
     [TestMethod]
-    public void Test_LinearNodesAreNotCyclic()
+    public void Test_TopologyHasOrphanNodes()
     {
         // arrange
+        // create a topology with no orphan nodes
+
+        var node1 = Shared.CreateComputeNode();
+        var node2 = Shared.CreateStorageNode();
+        var node3 = Shared.CreateStorageNode();
+
+        var link = Shared.LinkNodes(node1, node2, Shared.DataLink);
+        var topology = new Topology
+        {
+            Nodes = [node1, node2, node3],
+            Links = [link]
+        };
 
         // act
+        // pass the topology to the validator 
+        var sut = CreateValidator();
+        var result = sut.ValidateTopology(topology);
 
         // assert
-    }
-
-    // todo: this needs to separate tests, and we need a validation rule for each rather than doing it like this.
-
-
-    [TestMethod]
-    [DataRow("storage", "capacity", DisplayName = "Storage nodes have a capacity")]
-    [DataRow("compute", "cores", DisplayName = "Compute nodes have a number of cores")]
-    [DataRow("secure", "encryption", DisplayName = "Secure nodes specify encryption type")]
-    public void Test_CapabilityHasRequiredAttribute(string nodeType, string attributeName)
-    {
-        // arrange
-        // act
-        // hit the constraint directly for each ? make this 
-        // assert
+        Assert.IsNotNull(result);
+        Assert.IsFalse(result.Passed);
+        Assert.IsNotEmpty(result.RuleResults);
+        Assert.HasCount(5, result.RuleResults);
+        Assert.HasCount(1, result.RuleResults.Where(x => x is { Passed: false, RuleName: nameof(NoOrphanNodes) }), "only 1 rule should fail");
     }
 }

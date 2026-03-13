@@ -22,7 +22,11 @@
             var messages = new List<string>();
             foreach (var link in topology.Links)
             {
-                var allowedLinks = _allowedLinks[link.Kind];
+                if (!_allowedLinks.TryGetValue(link.Kind, out var allowedLinks))
+                {
+                    throw new InvalidOperationException($"Invalid link type {link.Kind}");
+                }
+
                 // todo: handle invalid node id in a cleaner way
                 var fromNode = topology.Nodes.FirstOrDefault(x => x.Id == link.From) ??
                                throw new InvalidOperationException($"Invalid From node id {link.From} in link");

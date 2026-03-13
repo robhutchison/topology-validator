@@ -3,3 +3,4 @@
 2026-03-13: 
 - Refactored mapping to extension methods for DTOs and models.
 - Added GitHub build action to build and run the tests on push
+- Added check for link type to make sure they are valid before trying to check them

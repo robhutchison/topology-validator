@@ -21,6 +21,8 @@ namespace Topology.API.DTO
                 }).ToList(),
                 Nodes = model.Nodes.Select(x => new Node
                 {
+                    Id = x.Id,
+                    Type = x.Type,
                     Attributes = x.Attributes.ToDictionary(),
                     Capabilities = x.Capabilities.ToList()
                 }).ToList()

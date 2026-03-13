@@ -3,14 +3,14 @@ name: dotnet test
 on : [push]
 
 jobs:
-  test:
+  run-tests:
     runs-on: ubuntu-latest    
     steps:
        - uses: actions/checkout@v5
        - name: Setup dotnet 10
-         uses: actions/checkout@v5
+         uses: actions/setup-dotnet@v4
          with: 
-              dotnet-version: 10.0.x
+           dotnet-version: 10.0.x
        - name: Restore
          run: dotnet restore
        - name: Build

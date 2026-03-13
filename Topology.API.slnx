@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".github/workflows/run-test.yaml" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Topology.Application/Topology.Application.csproj" />
+  <Project Path="Topology.Domain/Topology.Domain.csproj" />
+  <Project Path="Topology.Tests/Topology.Tests.csproj" />
+  <Project Path="Topology.API/Topology.API.csproj" />
+</Solution>

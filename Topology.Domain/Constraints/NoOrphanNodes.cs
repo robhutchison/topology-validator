@@ -15,7 +15,7 @@ public class NoOrphanNodes : ITopologyRule
         // make sure the nodes are all in the links list
         var links = topology.Links.Select(x => x.From).Union(topology.Links.Select(x => x.To)).ToList();
         var messages = new List<string>();
-        
+
         foreach (var node in topology.Nodes)
         {
             if (!links.Contains(node.Id))
@@ -24,9 +24,9 @@ public class NoOrphanNodes : ITopologyRule
             }
         }
 
-        return  new RuleResult
+        return new RuleResult
         {
-            Passed = messages.Count==0,
+            Passed = messages.Count == 0,
             RuleName = nameof(NoOrphanNodes),
             Messages = messages
         };

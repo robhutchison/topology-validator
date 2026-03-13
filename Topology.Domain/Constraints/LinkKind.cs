@@ -5,11 +5,11 @@
     /// </summary>
     public class LinkKind : ITopologyRule
     {
-        private readonly Dictionary<string, (string from,string to)> _allowedLinks = new()
+        private readonly Dictionary<string, (string from, string to)> _allowedLinks = new()
         {
-            {"data",("compute","storage")},
-            {"control",("compute","compute")},
-            {"replicate",("storage","storage")},
+            { "data", ("compute", "storage") },
+            { "control", ("compute", "compute") },
+            { "replicate", ("storage", "storage") },
         };
 
         public string RuleName()
@@ -30,7 +30,7 @@
                 // todo: handle invalid node id in a cleaner way
                 var toNode = topology.Nodes.FirstOrDefault(x => x.Id == link.To) ??
                              throw new InvalidOperationException($"Invalid To node id {link.To} in link");
-                
+
                 if (!fromNode.Type.Equals(allowedLinks.from, StringComparison.InvariantCulture)
                     || !toNode.Type.Equals(allowedLinks.to, StringComparison.InvariantCulture))
                 {

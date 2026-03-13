@@ -7,9 +7,9 @@ public class CapabilityRequiredAttribute : ITopologyRule
 {
     private readonly Dictionary<string, string> _requiredCapAttributes = new()
     {
-        {"storage","capacity"},
-        {"compute","cores"},
-        {"secure","encryption"},
+        { "storage", "capacity" },
+        { "compute", "cores" },
+        { "secure", "encryption" },
     };
 
     public string RuleName()

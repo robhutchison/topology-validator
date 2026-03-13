@@ -9,14 +9,16 @@ public static class Shared
     public const string ControlLink = "control";
     public const string ReplicateLink = "replicate";
 
-    public static Node CreateNode(string type, List<string>? capabilities = null, Dictionary<string, object>? attributes = null)
+    public static Node CreateNode(string type, List<string>? capabilities = null,
+        Dictionary<string, object>? attributes = null)
     {
         return new Node
         {
             Id = DateTime.Now.Ticks.ToString(),
             Type = type,
             Capabilities = capabilities?.AsReadOnly() ?? [],
-            Attributes = attributes?.AsReadOnly() ?? new ReadOnlyDictionary<string, object>(new Dictionary<string, object>())
+            Attributes = attributes?.AsReadOnly() ??
+                         new ReadOnlyDictionary<string, object>(new Dictionary<string, object>())
         };
     }
 

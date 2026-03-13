@@ -24,9 +24,9 @@ namespace Topology.Application
                 ruleResults.Add(rule.Evaluate(topology));
             }
 
-            var result =new ValidationResult
+            var result = new ValidationResult
             {
-                Passed = ruleResults.All(x=>x.Passed),
+                Passed = ruleResults.All(x => x.Passed),
                 RuleResults = ruleResults
             };
             return result;

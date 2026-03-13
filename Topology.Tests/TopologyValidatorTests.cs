@@ -13,7 +13,9 @@ public sealed class TopologyValidatorTests
 {
     private static TopologyValidator CreateValidator()
     {
-        return new TopologyValidator([new NoOrphanNodes(), new NoCyclicLinks(), new CapabilityRequiredAttribute(),new LinkKind(), new MaxFanOut()]);
+        return new TopologyValidator([
+            new NoOrphanNodes(), new NoCyclicLinks(), new CapabilityRequiredAttribute(), new LinkKind(), new MaxFanOut()
+        ]);
     }
 
     /// <summary>
@@ -44,8 +46,8 @@ public sealed class TopologyValidatorTests
         Assert.IsNotNull(result);
         Assert.IsTrue(result.Passed);
         Assert.IsNotEmpty(result.RuleResults);
-        Assert.HasCount(5,result.RuleResults);
-        Assert.HasCount(5, result.RuleResults.Where(x=>x.Passed));
+        Assert.HasCount(5, result.RuleResults);
+        Assert.HasCount(5, result.RuleResults.Where(x => x.Passed));
     }
 
     /// <summary>
@@ -78,6 +80,7 @@ public sealed class TopologyValidatorTests
         Assert.IsFalse(result.Passed);
         Assert.IsNotEmpty(result.RuleResults);
         Assert.HasCount(5, result.RuleResults);
-        Assert.HasCount(1, result.RuleResults.Where(x => x is { Passed: false, RuleName: nameof(NoOrphanNodes) }), "only 1 rule should fail");
+        Assert.HasCount(1, result.RuleResults.Where(x => x is { Passed: false, RuleName: nameof(NoOrphanNodes) }),
+            "only 1 rule should fail");
     }
 }

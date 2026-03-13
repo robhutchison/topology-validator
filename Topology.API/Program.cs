@@ -23,10 +23,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/openapi/v1.json", "v1");
-    });
+    app.UseSwaggerUI(options => { options.SwaggerEndpoint("/openapi/v1.json", "v1"); });
 }
 
 app.UseHttpsRedirection();
@@ -35,29 +32,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// NOTE: only doing this because the spec said to use minimal API. I'd normally use a controller and automapper for converting to/from DTOs.
+// NOTE: only doing this because the spec said to use minimal API. I'd normally use a controller 
 app.MapPost("/topology/validate", (TopologyDto dto) =>
 {
     var validator = app.Services.GetRequiredService<TopologyValidator>();
 
-    var topology = new Topology.Domain.Entities.Topology
-    {
-        Links = dto.Links.Select(x => new Link { From = x.From, To = x.To, Kind = x.Kind }).ToList(),
-        Nodes = dto.Nodes.Select(x => new Node { Attributes = x.Attributes.AsReadOnly(), Capabilities = x.Capabilities.AsReadOnly() }).ToList()
-    };
+    var topology = dto.FromDto();
     var result = validator.ValidateTopology(topology);
 
-    var resultDto = new ValidationResultDto
-    {
-        Passed = result.Passed,
-        RuleResults = result.RuleResults.Select(x => new RuleResultDto
-        {
-            Passed = x.Passed,
-            Messages = x.Messages.ToList(),
-            RuleName = x.RuleName
-        })
-            .ToList()
-    };
+    var resultDto = result.ToDto();
 
     return Results.Ok(resultDto);
 });

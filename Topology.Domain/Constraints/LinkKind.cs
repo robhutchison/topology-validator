@@ -22,25 +22,24 @@
         public RuleResult Evaluate(Entities.Topology topology)
         {
             var messages = new List<string>();
-            var faults = new List<string>();
             foreach (var link in topology.Links)
             {
                 if (!_allowedLinks.TryGetValue(link.Kind, out var allowedLinks))
                 {
-                    faults.Add($"Invalid link type {link.Kind}");
+                    messages.Add($"Invalid link type {link.Kind}");
                 }
 
                 var fromNode = topology.Nodes.FirstOrDefault(x => x.Id == link.From);
                 if (fromNode == null)
                 {
-                    faults.Add($"Invalid From node id {link.From} in link");
+                    messages.Add($"Invalid From node id {link.From} in link");
                 }
 
                 var toNode = topology.Nodes.FirstOrDefault(x => x.Id == link.To);
 
                 if (toNode == null)
                 {
-                    faults.Add($"Invalid To node id {link.To} in link");
+                    messages.Add($"Invalid To node id {link.To} in link");
                 }
 
                 if (fromNode == null || toNode == null) continue;
@@ -56,8 +55,7 @@
             {
                 Passed = messages.Count == 0,
                 RuleName = nameof(LinkKind),
-                Messages = messages,
-                Faults = faults
+                Messages = messages
             };
         }
     }

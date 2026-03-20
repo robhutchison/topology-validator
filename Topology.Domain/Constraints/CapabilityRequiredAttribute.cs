@@ -20,6 +20,7 @@ public class CapabilityRequiredAttribute : ITopologyRule
     public RuleResult Evaluate(Entities.Topology topology)
     {
         var messages = new List<string>();
+
         foreach (var node in topology.Nodes)
         {
             foreach (var (capability, attribute) in _requiredCapAttributes)

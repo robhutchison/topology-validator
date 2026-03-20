@@ -19,15 +19,27 @@
             // include the start and end nodes violating the rule
             // message is Nodes of type linear must not form cycles
 
+            var faults = new List<string>();
 
             foreach (var link in topology.Links)
             {
-                var fromNode = topology.Nodes.FirstOrDefault(x => x.Id == link.From) ??
-                               throw new InvalidOperationException($"From Id {link.From} in link is invalid");
+                var fromNode = topology.Nodes.FirstOrDefault(x => x.Id == link.From);
+                if (fromNode == null)
+                {
+                    faults.Add($"From Id {link.From} in link is invalid");
+
+                }
+
+                var toNode = topology.Nodes.FirstOrDefault(x => x.Id == link.To);
+                if (toNode == null)
+                {
+                    faults.Add($"To Id {link.To} in link is invalid");
+                }
+
+                if (fromNode is null || toNode is null) continue;
+
                 if (fromNode.Type != "linear") continue;
 
-                var toNode = topology.Nodes.FirstOrDefault(x => x.Id == link.To) ??
-                             throw new InvalidOperationException($"To Id {link.To} in link is invalid");
                 if (toNode.Type != "linear") continue;
 
                 if (previousLinearNodeIds.Contains(link.To))
@@ -44,7 +56,8 @@
             {
                 Passed = messages.Count == 0,
                 RuleName = nameof(NoCyclicLinks),
-                Messages = messages
+                Messages = messages,
+                Faults = faults
             };
         }
     }

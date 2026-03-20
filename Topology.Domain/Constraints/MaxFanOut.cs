@@ -12,17 +12,15 @@
 
         public RuleResult Evaluate(Entities.Topology topology)
         {
-            var messages = new List<string>();
-
             // group the links by the source (From) to get all the targets (To)
             var outgoingLinks = topology.Links
                 .GroupBy(x => x.From)
                 .Where(x => x.Count() > 3);
 
-            foreach (var sourceGroup in outgoingLinks)
-            {
-                messages.Add($"Node {sourceGroup.Key} has {sourceGroup.Count()} outgoing links");
-            }
+            var messages = outgoingLinks
+                .Select(sourceGroup => 
+                    $"Node {sourceGroup.Key} has {sourceGroup.Count()} outgoing links")
+                .ToList();
 
             return new RuleResult
             {

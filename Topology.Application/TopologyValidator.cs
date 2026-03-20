@@ -19,10 +19,7 @@ namespace Topology.Application
         public ValidationResult ValidateTopology(Domain.Entities.Topology topology)
         {
             var ruleResults = new List<RuleResult>();
-            foreach (var rule in rules)
-            {
-                ruleResults.Add(rule.Evaluate(topology));
-            }
+            ruleResults.AddRange(rules.Select(r => r.Evaluate(topology)));
 
             var result = new ValidationResult
             {

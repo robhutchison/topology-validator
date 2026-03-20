@@ -17,23 +17,33 @@
             return nameof(LinkKind);
         }
 
+
+
         public RuleResult Evaluate(Entities.Topology topology)
         {
             var messages = new List<string>();
+            var faults = new List<string>();
             foreach (var link in topology.Links)
             {
                 if (!_allowedLinks.TryGetValue(link.Kind, out var allowedLinks))
                 {
-                    throw new InvalidOperationException($"Invalid link type {link.Kind}");
+                    faults.Add($"Invalid link type {link.Kind}");
                 }
 
-                // todo: handle invalid node id in a cleaner way
-                var fromNode = topology.Nodes.FirstOrDefault(x => x.Id == link.From) ??
-                               throw new InvalidOperationException($"Invalid From node id {link.From} in link");
+                var fromNode = topology.Nodes.FirstOrDefault(x => x.Id == link.From);
+                if (fromNode == null)
+                {
+                    faults.Add($"Invalid From node id {link.From} in link");
+                }
 
-                // todo: handle invalid node id in a cleaner way
-                var toNode = topology.Nodes.FirstOrDefault(x => x.Id == link.To) ??
-                             throw new InvalidOperationException($"Invalid To node id {link.To} in link");
+                var toNode = topology.Nodes.FirstOrDefault(x => x.Id == link.To);
+
+                if (toNode == null)
+                {
+                    faults.Add($"Invalid To node id {link.To} in link");
+                }
+
+                if (fromNode == null || toNode == null) continue;
 
                 if (!fromNode.Type.Equals(allowedLinks.from, StringComparison.InvariantCulture)
                     || !toNode.Type.Equals(allowedLinks.to, StringComparison.InvariantCulture))
@@ -46,7 +56,8 @@
             {
                 Passed = messages.Count == 0,
                 RuleName = nameof(LinkKind),
-                Messages = messages
+                Messages = messages,
+                Faults = faults
             };
         }
     }
